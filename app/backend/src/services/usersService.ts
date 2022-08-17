@@ -16,6 +16,11 @@ const doToken = (response: IUser): string => {
   return token;
 };
 
+const decriptToken = (token: string): undefined | any => {
+  const decode = jwt.verify(token, secret);
+  return decode;
+};
+
 export default class UserService {
   login = async (username: string, password: string): Promise<string | null> => {
     const response = await user.findOne({ where: { username } });
@@ -24,5 +29,12 @@ export default class UserService {
     if (!result) return null;
     const token = doToken(response);
     return token;
+  };
+
+  validate = (token: string): any => {
+    const response = decriptToken(token);
+    if (!response) return null;
+    const { role } = response;
+    return role;
   };
 }
