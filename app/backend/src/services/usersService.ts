@@ -7,9 +7,9 @@ import IUser from './IUser';
 const secret = process.env.JWT_SECRET || 'jwt_secret';
 
 const doToken = (response: IUser): string => {
-  const { username, role, email } = response;
+  const { email } = response;
   const token = jwt.sign(
-    { data: username, role, email },
+    { data: email },
     secret,
     { expiresIn: '7d', algorithm: 'HS256' },
   );
@@ -22,8 +22,8 @@ const decriptToken = (token: string): undefined | any => {
 };
 
 export default class UserService {
-  login = async (username: string, password: string): Promise<string | null> => {
-    const response = await user.findOne({ where: { username } });
+  login = async (email: string, password: string): Promise<string | null> => {
+    const response = await user.findOne({ where: { email } });
     if (!response) return null;
     const result = bcrypt.compareSync(password, response.password);
     if (!result) return null;
@@ -31,8 +31,10 @@ export default class UserService {
     return token;
   };
 
-  validate = (token: string): any => {
-    const response = decriptToken(token);
+  validate = async (token: string): Promise<string | null> => {
+    const { data } = decriptToken(token);
+    if (!data) return null;
+    const response = await user.findOne({ where: { email: data } });
     if (!response) return null;
     const { role } = response;
     return role;

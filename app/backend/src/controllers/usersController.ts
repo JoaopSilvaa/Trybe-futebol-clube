@@ -5,16 +5,16 @@ export default class UserController {
   constructor(private userService: UserService) {}
 
   login = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-    const token = await this.userService.login(username, password);
+    const { email, password } = req.body;
+    const token = await this.userService.login(email, password);
     if (!token) return res.status(401).json({ message: 'Incorrect email or password' });
     return res.status(200).json({ token });
   };
 
-  validate = (req: Request, res: Response) => {
+  validate = async (req: Request, res: Response) => {
     const token = req.headers.authorization;
     if (!token) return res.status(401).json({ message: 'Token not found' });
-    const role = this.userService.validate(token);
+    const role = await this.userService.validate(token);
     return res.status(200).json({ role });
   };
 }
