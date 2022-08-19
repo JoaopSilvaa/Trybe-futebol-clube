@@ -9,7 +9,6 @@ export default class TeamService {
 
   listById = async (id: number): Promise<ITeam | null> => {
     const response = await team.findByPk(id);
-    if (!response) return null;
     return response;
   };
 }
