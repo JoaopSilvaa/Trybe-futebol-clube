@@ -32,22 +32,22 @@ describe('Matches', () => {
           awayTeamGoals: 1,
           inProgress: false
         },
-      ] as Match[]);
-    sinon
-      .stub(Match, 'create')
-      .resolves(
         { id: 3,
           homeTeam: 2,
           homeTeamGoals: 7,
           awayTeam: 1,
           awayTeamGoals: 1,
           inProgress: true
-        } as Match); 
+        }, 
+      ] as Match[]);
+    sinon
+      .stub(Match, 'update')
+      .resolves();
   });
 
   after(()=>{
     (Match.findAll as sinon.SinonStub).restore();
-    (Match.create as sinon.SinonStub).restore();
+    (Match.update as sinon.SinonStub).restore();
   })
 
   it('should return matches', async () => {
@@ -55,26 +55,58 @@ describe('Matches', () => {
       .get('/matches')
 
     expect(response.status).to.equal(200);
-    expect(response.body).to.length(2);
+    expect(response.body).to.length(3);
   });
 
-
-  // it('create a match', async () => {
-  //   const response = await chai.request(app)
-  //     .post('/matches')
-  //     .set(
-  //       { 
-  //         authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjYwODI5OTkyLCJleHAiOjE2NjE0MzQ3OTJ9.iw46m3Z5y8bHKOSL50Qwan6g4djFRYNSODtkvNAdb9E'
-  //       }
-  //     )
-  //     .send({
-  //       homeTeam: 2,
-  //       homeTeamGoals: 7,
-  //       awayTeam: 1,
-  //       awayTeamGoals: 1,
-  //     })
+  it('update a match', async () => {
+    const response = await chai.request(app)
+      .patch('/matches/3')
+      .send(
+        {
+          "homeTeamGoals": 7,
+          "awayTeamGoals": 7
+        }
+      )
     
-  //   expect(response.status).to.equal(201);
-  //   expect(response.body).to.haveOwnProperty('id').include(3);
-  // });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.haveOwnProperty('message').include('GOOOOOOOOL');
+  });
+
+  it('finish a match', async () => {
+    const response = await chai.request(app)
+      .patch('/matches/3/finish')
+    
+    expect(response.status).to.equal(200);
+    expect(response.body).to.haveOwnProperty('message').include('Finished');
+  });
 });
+
+describe('Matches by term', () => {
+  before(async () => {
+    sinon
+      .stub(Match, 'findAll')
+      .resolves([
+        { id: 3,
+          homeTeam: 2,
+          homeTeamGoals: 7,
+          awayTeam: 1,
+          awayTeamGoals: 1,
+          inProgress: true
+        }, 
+      ] as Match[]);
+  });
+  
+  after(()=>{
+    (Match.findAll as sinon.SinonStub).restore();
+  })
+  
+  it('should return matches by term', async () => {
+    const response = await chai.request(app)
+      .get('/matches?inProgress=true')
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.length(1);
+    expect(response.body[0]).to.haveOwnProperty('id').equal(3);
+  });
+});
+

@@ -52,3 +52,42 @@ describe('Users & Login', () => {
     expect(response.body).to.haveOwnProperty('role').include('admin');
   });
 });
+
+describe('Errors in Users & Login', () => {
+  
+  before(async () => {
+    sinon
+      .stub(User, "findOne")
+      .resolves();
+  });
+
+  after(()=>{
+    (User.findOne as sinon.SinonStub).restore();
+  })
+
+  it('returns error', async () => {
+    const response = await chai.request(app)
+      .post('/login')
+      .send({ email: 'abluble@gmail.com', password: 'aguigui' })
+    
+    expect(response.status).to.equal(401);
+    expect(response.body).to.haveOwnProperty('message').include('Incorrect email or password');
+  });
+
+  it('validation login', async () => {
+    const response = await chai.request(app)
+      .post('/login')
+      .send({ email: 'abluble@gmail.com' })
+    
+    expect(response.status).to.equal(400);
+    expect(response.body).to.haveOwnProperty('message').include('All fields must be filled');
+  });
+
+  it('don\'t have token ', async () => {
+    const response = await chai.request(app)
+      .get('/login/validate')
+
+    expect(response.status).to.equal(401);
+    expect(response.body).to.haveOwnProperty('message').include('Token not found');
+  });
+});
