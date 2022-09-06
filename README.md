@@ -1,16 +1,18 @@
-# 🚧 README em construção 🚧
+# Trybe Futebol Clube
 
-<!-- Olá, Tryber!
+# O que é o Trybe Futebol Clube
 
-Esse é apenas um arquivo inicial para o README do seu projeto.
+É um site informativo sobre partidas e classificações de futebol!
+Aqui foi construído um back-end dockerizado utilizando modelagem de dados através do Sequelize. 
 
-É essencial que você preencha esse documento por conta própria, ok?
+## Técnologias usadas
 
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
+Back-end:
+> Desenvolvido usando: TypeScript, Docker, API Restful, CRUD, Sequelize
 
-⚠️ IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
 
--->
+## Executando a aplicação
+* Para rodar a aplicação é necessário executar o comando `npm run compose:up` na pasta ./app e depois acessar localhost:3000 em seu navegador para ver a aplicação funcionando
+
+<br><br>
+Este projeto foi desenvolvido por [João Antônio](https://www.linkedin.com/in/joaoantoniosilvaa/) durante o curso de Desenvolvimento de Software na [Trybe](https://www.betrybe.com/) 
