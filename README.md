@@ -1,6 +1,6 @@
-# Trybe Futebol Clube
+# Futebol Clube
 
-# O que é o Trybe Futebol Clube
+# O que é o Futebol Clube
 
 É um site informativo sobre partidas e classificações de futebol!
 Aqui foi construído um back-end dockerizado utilizando modelagem de dados através do Sequelize. 
